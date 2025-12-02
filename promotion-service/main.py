@@ -1,11 +1,11 @@
-"""Promotion Service"""
+"""Promotion Service - Clean Architecture"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sys, os
 sys.path.insert(0, os.path.dirname(__file__))
 from config.database import engine
 from config.settings import CORS_ORIGINS, API_TITLE, API_VERSION
-from models.promotion import Base
+from models.schema import Base
 from routers import promotion
 
 app = FastAPI(title=API_TITLE, version=API_VERSION)

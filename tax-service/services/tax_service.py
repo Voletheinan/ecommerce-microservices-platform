@@ -1,7 +1,7 @@
 """Tax service"""
 from sqlalchemy.orm import Session
-from models.schema import TaxRate
-from models.schema import TaxRateCreate
+from models.tax import TaxRate
+from models.schema import TaxRateCreate, TaxRate as TaxRateSchema
 
 class TaxService:
     @staticmethod
@@ -23,6 +23,8 @@ class TaxService:
     def calculate_tax(db: Session, amount: float, country: str, state: str = None):
         tax_rate = TaxService.get_tax_rate(db, country, state)
         if tax_rate:
-            tax_amount = amount * (tax_rate.tax_percent / 100)
-            return {"amount": amount, "tax_percent": tax_rate.tax_percent, "tax_amount": tax_amount, "total": amount + tax_amount}
-        return {"amount": amount, "tax_percent": 0, "tax_amount": 0, "total": amount}
+            tax_percent = tax_rate.tax_percent
+        else:
+            tax_percent = 10.0  # mặc định 10%
+        tax_amount = amount * (tax_percent / 100)
+        return {"amount": amount, "tax_percent": tax_percent, "tax_amount": tax_amount, "total": amount + tax_amount}

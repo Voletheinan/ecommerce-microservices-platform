@@ -3,7 +3,7 @@ Order service business logic
 """
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from models.schema import OrderCreate, OrderUpdate, Order
+from models.schema import OrderCreate, OrderUpdate, Order, OrderItem
 from config.kafka import kafka_service
 
 class OrderService:
