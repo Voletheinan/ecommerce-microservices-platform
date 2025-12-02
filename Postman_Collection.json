@@ -1,0 +1,757 @@
+{
+  "info": {
+    "name": "E-Commerce Microservices API",
+    "description": "Complete API collection for e-commerce microservices",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "User Service",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"user@example.com\",\"username\":\"testuser\",\"password\":\"password123\",\"full_name\":\"Test User\",\"phone\":\"0123456789\",\"address\":\"123 Main St\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"testuser\",\"password\":\"password123\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Laptop\",\"description\":\"High-performance laptop\",\"price\":1500,\"category\":\"Electronics\",\"stock\":50,\"sku\":\"LT-001\",\"images\":[\"image1.jpg\",\"image2.jpg\"]}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", ""]
+            }
+          }
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/?skip=0&limit=10&category=Electronics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "category",
+                  "value": "Electronics"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/search/?keyword=laptop&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search", ""],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Service",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user_id\":1,\"items\":[{\"product_id\":\"507f1f77bcf86cd799439011\",\"quantity\":2,\"price\":1500}],\"shipping_address\":\"123 Main St, City, Country\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "List User Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/?skip=0&limit=10&user_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ""],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "user_id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\":\"confirmed\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/1/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Service",
+      "item": [
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"order_id\":1,\"user_id\":1,\"amount\":3000,\"payment_method\":\"credit_card\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Refund Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/payments/1/refund",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "1", "refund"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory Service",
+      "item": [
+        {
+          "name": "Create Inventory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"product_id\":\"507f1f77bcf86cd799439011\",\"quantity\":100,\"warehouse_location\":\"A-1-1\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/inventory/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "inventory", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Inventory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/inventory/507f1f77bcf86cd799439011",
+              "host": ["{{base_url}}"],
+              "path": ["api", "inventory", "507f1f77bcf86cd799439011"]
+            }
+          }
+        },
+        {
+          "name": "Check Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/inventory/507f1f77bcf86cd799439011/check-stock?quantity=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "inventory", "507f1f77bcf86cd799439011", "check-stock"],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shipping Service",
+      "item": [
+        {
+          "name": "Create Shipment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"order_id\":1,\"carrier\":\"DHL\",\"estimated_delivery\":\"2024-12-15T10:00:00\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/shipments/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipments", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Shipment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/shipments/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipments", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Shipment Status",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/shipments/1/status?status=in_transit",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipments", "1", "status"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "in_transit"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rating Service",
+      "item": [
+        {
+          "name": "Create Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"product_id\":\"507f1f77bcf86cd799439011\",\"user_id\":1,\"score\":4.5,\"comment\":\"Great product!\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ratings/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ratings", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Product Ratings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ratings/product/507f1f77bcf86cd799439011",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ratings", "product", "507f1f77bcf86cd799439011"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favourite Service",
+      "item": [
+        {
+          "name": "Add Favourite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"product_id\":\"507f1f77bcf86cd799439011\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/favourites/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favourites", ""]
+            }
+          }
+        },
+        {
+          "name": "Get User Favourites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/favourites/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favourites", ""]
+            }
+          }
+        },
+        {
+          "name": "Remove Favourite",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/favourites/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "favourites", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notification Service",
+      "item": [
+        {
+          "name": "Create Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"user_id\":1,\"title\":\"Order Confirmation\",\"message\":\"Your order has been confirmed\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notifications/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", ""]
+            }
+          }
+        },
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/?unread_only=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", ""],
+              "query": [
+                {
+                  "key": "unread_only",
+                  "value": "false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notifications/1/read",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notifications", "1", "read"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tax Service",
+      "item": [
+        {
+          "name": "Create Tax Rate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"country\":\"US\",\"state\":\"CA\",\"tax_percent\":8.625}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tax/rates",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tax", "rates"]
+            }
+          }
+        },
+        {
+          "name": "Calculate Tax",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tax/calculate?amount=100&country=US&state=CA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tax", "calculate"],
+              "query": [
+                {
+                  "key": "amount",
+                  "value": "100"
+                },
+                {
+                  "key": "country",
+                  "value": "US"
+                },
+                {
+                  "key": "state",
+                  "value": "CA"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotion Service",
+      "item": [
+        {
+          "name": "Create Promotion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Black Friday\",\"description\":\"50% off on all products\",\"discount_percent\":50,\"start_date\":\"2024-11-24T00:00:00\",\"end_date\":\"2024-11-30T23:59:59\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/promotions/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "promotions", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Active Promotions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/promotions/active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "promotions", "active"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Checks",
+      "item": [
+        {
+          "name": "API Gateway Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "User Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "health"]
+            }
+          }
+        },
+        {
+          "name": "Product Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
