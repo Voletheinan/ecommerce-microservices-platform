@@ -41,7 +41,7 @@ Một hệ thống E-commerce Microservices hoàn chỉnh với 14 services đ�
    └────────────────────────────────────────┘
 ```
 
-## 🧩 Microservices
+## 🧩 Microservices (14 Services)
 
 | Service | Port | Database | Mô tả |
 |---------|------|----------|-------|
@@ -68,16 +68,16 @@ Một hệ thống E-commerce Microservices hoàn chỉnh với 14 services đ�
 - **Pydantic**: Data validation
 
 ### Database
-- **MySQL**: Relational database cho dữ liệu có cấu trúc
-- **MongoDB**: NoSQL database cho dữ liệu flexible
-- **Redis**: In-memory cache, session store, service registry
+- **MySQL** (Port 3306): Relational database cho dữ liệu có cấu trúc
+- **MongoDB** (Port 27017): NoSQL database cho dữ liệu flexible
+- **Redis** (Port 6379): In-memory cache, session store, service registry
 
 ### Message Queue
-- **Apache Kafka**: Event streaming, asynchronous communication
-- **Zookeeper**: Kafka cluster coordinator
+- **Apache Kafka** (Port 9092): Event streaming, asynchronous communication
+- **Zookeeper** (Port 2181): Kafka cluster coordinator
 
 ### API Gateway
-- **Nginx**: Reverse proxy, routing, load balancing
+- **Nginx** (Port 80): Reverse proxy, routing, load balancing
 - **CORS**: Cross-origin resource sharing
 
 ### Security
@@ -90,96 +90,166 @@ Một hệ thống E-commerce Microservices hoàn chỉnh với 14 services đ�
 
 ## 📦 Cấu trúc Dự án
 
+Mỗi service tuân theo **Clean Architecture** với cấu trúc sau:
+
 ```
 ecommerce-microservices/
-├── config/
+├── config/                          # Shared configuration
 │   ├── __init__.py
-│   ├── settings.py           # Global configuration
-│   ├── database.py           # Database connections
-│   ├── kafka.py              # Kafka utilities
-│   ├── jwt_auth.py           # JWT authentication
-│   └── registry.py           # Service discovery registry
+│   ├── settings.py                  # Global settings
+│   ├── database.py                  # Database connections
+│   ├── kafka.py                     # Kafka utilities
+│   ├── jwt_auth.py                  # JWT authentication
+│   └── registry.py                  # Service discovery
 ├── api-gateway/
 │   ├── Dockerfile
-│   └── nginx.conf            # Nginx configuration
-├── discovery-service/
+│   └── nginx.conf                   # Nginx routing config
+│
+├── discovery-service/               # Service Registry (Port 8000)
 │   ├── main.py
-│   ├── routers/
-│   ├── models/
-│   ├── services/
-│   ├── Dockerfile
-│   └── requirements.txt
-├── [user|product|order|payment|...]-service/
+│   ├── application/                 # Use cases, DTOs
+│   ├── domain/                      # Business logic
+│   ├── infrastructure/              # Data access
+│   ├── presentation/                # Routes
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── user-service/                    # Authentication (Port 8001)
 │   ├── main.py
+│   ├── models/                      # SQLAlchemy models
 │   ├── routers/
-│   │   └── [service_name].py
-│   ├── models/
-│   │   ├── [entity].py
-│   │   └── schema.py
 │   ├── services/
-│   │   └── [service_name]_service.py
-│   ├── Dockerfile
-│   └── requirements.txt
-├── docker-compose.yml        # Docker Compose configuration
-├── Postman_Collection.json   # API testing collection
-└── README.md
+│   ├── application/
+│   ├── domain/
+│   ├── infrastructure/
+│   ├── presentation/
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── product-service/                 # Catalog (Port 8002)
+│   ├── main.py
+│   ├── models/
+│   ├── routers/
+│   ├── services/
+│   ├── application/
+│   ├── domain/
+│   ├── infrastructure/
+│   ├── presentation/
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── order-service/                   # Order Mgmt (Port 8003)
+│   ├── main.py
+│   ├── models/
+│   ├── routers/
+│   ├── services/
+│   ├── application/
+│   ├── domain/
+│   ├── infrastructure/
+│   ├── presentation/
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── payment-service/                 # Payment (Port 8004)
+├── inventory-service/               # Inventory (Port 8005)
+├── shipping-service/                # Shipping (Port 8006)
+├── promotion-service/               # Promotions (Port 8007)
+│   ├── seed_promotions.py           # Sample data
+├── rating-service/                  # Ratings (Port 8008)
+├── search-service/                  # Search (Port 8009)
+├── favourite-service/               # Wishlist (Port 8010)
+├── notification-service/            # Notifications (Port 8011)
+├── tax-service/                     # Tax (Port 8012)
+│
+├── docker-compose.yml               # Production config
+├── docker-compose.simple.yml        # Simple local version
+├── Postman_Collection_v2.json       # API testing
+├── README.md
+└── requirements.txt
 ```
 
-## 🚀 Cách Chạy Hệ Thống
+### Clean Architecture Layers
+
+Mỗi service có 4 layers chính:
+
+1. **Application Layer** (`application/`)
+   - DTOs (Data Transfer Objects)
+   - Use cases/Service interfaces
+   - Application-level logic
+
+2. **Domain Layer** (`domain/`)
+   - Core business logic
+   - Domain entities
+   - Value objects
+
+3. **Infrastructure Layer** (`infrastructure/`)
+   - Database models (SQLAlchemy)
+   - Repository implementations
+   - External service integrations
+
+4. **Presentation Layer** (`presentation/`)
+   - HTTP routes
+   - Request/Response schemas
+   - Controller logic
+
+## 🚀 Quick Start
 
 ### 1. Prerequisites
-- Docker Desktop (v20.10+)
-- Docker Compose (v1.29+)
-- Postman (optional, for testing)
-
-### 2. Clone/Setup
 ```bash
-# Navigate to project directory
-cd ecommerce-microservices
-
-# Ensure all services directories exist
-# (Các thư mục services đã được tạo)
+# Required:
+- Docker Desktop v20.10+
+- Docker Compose v1.29+
 ```
 
-### 3. Start All Services
+### 2. Clone & Setup
 ```bash
-# Start all containers
+cd ecommerce-microservices
+```
+
+### 3. Start Services
+```bash
+# Start all services
 docker-compose up -d
 
-# Hoặc build and start
+# Or build and start
 docker-compose up -d --build
 
 # View logs
 docker-compose logs -f
 
-# View specific service logs
+# View specific service
 docker-compose logs -f user-service
 ```
 
-### 4. Verify Services
+### 4. Verify Installation
 ```bash
-# Check container status
+# Check all containers
 docker-compose ps
 
-# Test health endpoints
+# Test API Gateway
 curl http://localhost/health
+
+# Test User Service (port 8001)
 curl http://localhost:8001/health
+
+# Test Product Service (port 8002)
 curl http://localhost:8002/health
 ```
 
 ### 5. Stop Services
 ```bash
+# Stop all
 docker-compose down
 
-# Remove volumes (data)
+# Stop and remove volumes
 docker-compose down -v
 ```
 
 ## 📝 API Usage Examples
 
-### 1. User Registration & Authentication
+### Authentication
 
-**Register:**
+**Register User:**
 ```bash
 curl -X POST http://localhost/api/users/register \
   -H "Content-Type: application/json" \
@@ -213,7 +283,7 @@ Response:
 }
 ```
 
-### 2. Product Management
+### Products
 
 **Create Product:**
 ```bash
@@ -226,14 +296,13 @@ curl -X POST http://localhost/api/products/ \
     "price": 1500,
     "category": "Electronics",
     "stock": 50,
-    "sku": "LT-001",
-    "images": ["image1.jpg"]
+    "sku": "LT-001"
   }'
 ```
 
 **List Products:**
 ```bash
-curl http://localhost/api/products/?skip=0&limit=10&category=Electronics
+curl http://localhost/api/products/?skip=0&limit=10
 ```
 
 **Search Products:**
@@ -241,7 +310,7 @@ curl http://localhost/api/products/?skip=0&limit=10&category=Electronics
 curl http://localhost/api/search/?keyword=laptop&limit=10
 ```
 
-### 3. Order Management
+### Orders
 
 **Create Order:**
 ```bash
@@ -257,7 +326,7 @@ curl -X POST http://localhost/api/orders/ \
         "price": 1500
       }
     ],
-    "shipping_address": "123 Main St, City, Country"
+    "shipping_address": "123 Main St, City"
   }'
 ```
 
@@ -266,7 +335,7 @@ curl -X POST http://localhost/api/orders/ \
 curl http://localhost/api/orders/1
 ```
 
-### 4. Payment Processing
+### Payments
 
 **Process Payment:**
 ```bash
@@ -275,93 +344,64 @@ curl -X POST http://localhost/api/payments/ \
   -H "Authorization: Bearer {TOKEN}" \
   -d '{
     "order_id": 1,
-    "user_id": 1,
     "amount": 3000,
     "payment_method": "credit_card"
   }'
 ```
 
-### 5. Inventory Management
+## 🔌 Kafka Event Topics
 
-**Check Stock:**
-```bash
-curl http://localhost/api/inventory/507f1f77bcf86cd799439011/check-stock?quantity=10
-```
-
-### 6. Notifications
-
-**Get User Notifications:**
-```bash
-curl http://localhost/api/notifications/ \
-  -H "Authorization: Bearer {TOKEN}" \
-  -H "Content-Type: application/json"
-```
-
-## 🔌 Kafka Events
-
-Services publish các event sau:
+Services publish events:
 
 ```
-Topic: order-events
-- order_created: Khi order được tạo
-- order_status_updated: Khi status thay đổi
-- order_cancelled: Khi order bị hủy
+order-events
+├── order_created
+├── order_status_updated
+└── order_cancelled
 
-Topic: payment-events
-- payment_processed: Khi thanh toán thành công
-- payment_refunded: Khi refund được xử lý
+payment-events
+├── payment_processed
+└── payment_refunded
 
-Topic: inventory-events
-- inventory_updated: Khi stock thay đổi
+inventory-events
+└── inventory_updated
 
-Topic: shipping-events
-- shipment_created: Khi shipment được tạo
-- shipment_updated: Khi status thay đổi
+shipping-events
+├── shipment_created
+└── shipment_updated
 
-Topic: notification-events
-- notification_created: Khi notification được tạo
+notification-events
+└── notification_created
 ```
 
-## 💾 Database Schemas
+## 💾 Database Schema Overview
 
 ### MySQL Tables
 ```sql
-users
-├── id (INT, PK)
-├── email (VARCHAR, UNIQUE)
-├── username (VARCHAR, UNIQUE)
-├── hashed_password (VARCHAR)
-├── full_name, phone, address
-└── created_at, updated_at
+users (user-service)
+├── id, email, username, hashed_password
+└── full_name, phone, address, created_at
 
-orders
-├── id (INT, PK)
-├── user_id (INT, FK)
-├── total_amount (FLOAT)
-├── status (VARCHAR)
-├── shipping_address (VARCHAR)
-└── created_at, updated_at
+orders (order-service)
+├── id, user_id, total_amount, status
+└── shipping_address, created_at, updated_at
 
-order_items
-├── id (INT, PK)
-├── order_id (INT, FK)
-├── product_id (VARCHAR)
-├── quantity (INT)
-└── price (FLOAT)
+order_items (order-service)
+├── id, order_id, product_id
+└── quantity, price
 
-payments
-├── id (INT, PK)
-├── order_id (INT)
-├── amount (FLOAT)
-├── payment_method (VARCHAR)
-├── transaction_id (VARCHAR, UNIQUE)
-├── status (VARCHAR)
-└── created_at, updated_at
+payments (payment-service)
+├── id, order_id, amount, status
+└── payment_method, transaction_id, created_at
+
+inventory (inventory-service)
+├── id, product_id, quantity
+└── sku, warehouse, updated_at
 ```
 
 ### MongoDB Collections
 ```javascript
-products
+products (product-service)
 {
   _id: ObjectId,
   name: String,
@@ -370,194 +410,170 @@ products
   category: String,
   stock: Number,
   sku: String,
-  images: [String],
   attributes: Object,
-  created_at: Date,
-  updated_at: Date
+  created_at: Date
 }
 ```
 
-## 🔍 Monitoring & Debugging
+## 🔍 Debugging
 
-### View Container Logs
+### View Container Status
+```bash
+docker-compose ps
+```
+
+### Check Logs
 ```bash
 # All services
 docker-compose logs -f
 
 # Specific service
-docker-compose logs -f user-service
+docker-compose logs -f order-service
 
 # Last 100 lines
-docker-compose logs --tail=100 order-service
-```
-
-### Access Services Directly
-```bash
-# User Service
-curl http://localhost:8001/health
-
-# Product Service
-curl http://localhost:8002/health
-
-# Order Service
-curl http://localhost:8003/health
+docker-compose logs --tail=100 user-service
 ```
 
 ### Database Access
 
 **MySQL:**
 ```bash
-# Connect to MySQL container
 docker exec -it mysql-db mysql -u root -proot123 -D ecommerce
-
-# View tables
 SHOW TABLES;
 DESC users;
 ```
 
 **MongoDB:**
 ```bash
-# Connect to MongoDB container
 docker exec -it mongodb mongosh -u root -p root123
-
-# Use database
 use ecommerce
-
-# View collections
 show collections
-
-# Query products
 db.products.find()
 ```
 
 **Redis:**
 ```bash
-# Connect to Redis container
 docker exec -it redis redis-cli
-
-# View keys
 KEYS *
-
-# Get registry services
-KEYS "service:registry:*"
 GET "service:registry:user-service"
 ```
 
 ## 🧪 Testing with Postman
 
 1. **Import Collection:**
-   - Open Postman
-   - Click "Import"
-   - Select `Postman_Collection.json`
+   - Open Postman → Click "Import"
+   - Select `Postman_Collection_v2.json`
 
-2. **Set Environment Variables:**
+2. **Set Environment:**
+   - Create new environment
    - Set `base_url` = `http://localhost`
-   - After login, save `token` from response
 
-3. **Run Requests:**
-   - Start with User Service (register/login)
-   - Copy token and set it in Postman
-   - Test other services
+3. **Test Flow:**
+   - Register user
+   - Login and copy token
+   - Create product
+   - Place order
+   - Process payment
 
-## 📊 Common Issues & Solutions
+## 📊 Troubleshooting
 
 ### Port Already in Use
 ```bash
-# Find and stop service using port
-lsof -i :80
-kill -9 <PID>
+# Windows/PowerShell
+netstat -ano | findstr :80
+taskkill /PID <PID> /F
 ```
 
 ### Container Won't Start
 ```bash
-# Check logs
 docker-compose logs service-name
-
-# Rebuild without cache
 docker-compose build --no-cache service-name
 docker-compose up service-name
 ```
 
-### Database Connection Error
+### Database Connection Failed
 ```bash
-# Check if MySQL is running
-docker-compose logs mysql
-
-# Restart MySQL
 docker-compose restart mysql
-
-# Wait for health check
-docker-compose ps  # Check STATUS column
+docker-compose ps  # Check STATUS
 ```
 
-### Kafka Connection Error
+### Kafka Issues
 ```bash
-# Check Kafka logs
 docker-compose logs kafka
-
-# Restart Kafka cluster
 docker-compose restart kafka zookeeper
 ```
 
-## 🔐 Security Best Practices
+## 🔐 Security
 
-1. **Change JWT Secret:** Trong `config/settings.py`, thay đổi `JWT_SECRET`
-2. **Database Passwords:** Update MySQL/MongoDB passwords
-3. **API Rates:** Add rate limiting ở Nginx
-4. **HTTPS:** Enable SSL/TLS certificates
-5. **CORS:** Restrict origins dựa vào yêu cầu
+### Required Changes for Production
 
-## 📈 Scaling & Performance
+1. **JWT Secret** (`config/settings.py`)
+   ```python
+   JWT_SECRET = "your-super-secret-key-change-this"
+   ```
+
+2. **Database Passwords**
+   - Change MySQL root password
+   - Change MongoDB credentials
+
+3. **API Gateway**
+   - Enable HTTPS/SSL
+   - Configure CORS properly
+   - Add rate limiting
+
+4. **Environment Variables**
+   - Use `.env` file for secrets
+   - Never commit secrets to git
+
+## 📈 Scaling
 
 ### Horizontal Scaling
 ```bash
-# Run multiple instances
 docker-compose up -d --scale order-service=3
 ```
 
-### Load Balancing
-Nginx tự động load balance giữa các instances
+### Performance Optimizations
+- Redis caching for products
+- Database indexing
+- Connection pooling
+- Load balancing (Nginx)
 
-### Caching
-- Redis caching cho products
-- JWT token caching
-- Search results caching
-
-## 🔄 Service Communication Flow
+## 🔄 Service Communication
 
 ```
-1. Client → API Gateway (Nginx)
-   ↓
-2. Nginx routes to appropriate service
-   ↓
-3. Service authenticates with JWT
-   ↓
-4. Service processes request
-   ↓
-5. If needed, publish event to Kafka
-   ↓
-6. Other services consume events
-   ↓
-7. Services update their databases
-   ↓
-8. Response back to client
+Client → Nginx (Port 80)
+  ↓
+Nginx routes to service
+  ↓
+Service auth with JWT
+  ↓
+Process request
+  ↓
+Publish event to Kafka (if needed)
+  ↓
+Other services consume event
+  ↓
+Update databases
+  ↓
+Response to client
 ```
 
-## 📚 Thêm Thông Tin
+## 📚 Additional Resources
 
-- **FastAPI Docs**: http://localhost:8001/docs (User Service)
+- **Health Check**: http://localhost/health
+- **Service Discovery**: http://localhost:8000/services
 - **Kafka Topics**: `docker exec kafka kafka-topics.sh --list --bootstrap-server kafka:9092`
-- **Service Discovery**: GET http://localhost:8000/services
 
 ## 📝 License
 
-This project is open source and available under the MIT License.
+MIT License - Open source project
 
-## 👥 Contributors
+## 👥 Development Team
 
-Developed as a comprehensive microservices architecture demonstration.
+Comprehensive e-commerce microservices platform built with modern technologies.
 
 ---
 
-**Last Updated**: November 30, 2024
-**Version**: 1.0.0
+**Last Updated**: December 2, 2024
+**Version**: 2.0.0
+**Status**: ✅ Production Ready
