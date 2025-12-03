@@ -1,5 +1,8 @@
 """Search routes"""
 from fastapi import APIRouter, Query
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from services.search_service import search_service
 
 router = APIRouter(prefix="/api/search", tags=["search"])
 
