@@ -11,7 +11,7 @@ MYSQL_USER = os.getenv("MYSQL_USER", "root")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "root123")
 MYSQL_DB = os.getenv("MYSQL_DB", "ecommerce")
 
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://mongodb:27017")
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://mongodb:27017/?authSource=admin&retryWrites=true")
 MONGODB_DB = os.getenv("MONGODB_DB", "ecommerce")
 
 # Redis Configuration

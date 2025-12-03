@@ -7,6 +7,8 @@ from services.search_service import search_service
 router = APIRouter(prefix="/api/search", tags=["search"])
 
 @router.get("/")
-def search(keyword: str = Query(...), category: str = Query(None), limit: int = Query(10)):
-    result = search_service.search_products(keyword)
+async def search(keyword: str = Query(None), category: str = Query(None), limit: int = Query(10)):
+    """Search products by keyword. If no keyword, returns all products"""
+    search_term = keyword if keyword else "*"
+    result = await search_service.search_products(search_term, limit=limit)
     return {"keyword": keyword, **result, "limit": limit}
