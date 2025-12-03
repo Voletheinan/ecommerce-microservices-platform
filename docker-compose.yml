@@ -375,6 +375,8 @@ services:
       KAFKA_BROKER: kafka:9092
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      MONGODB_URL: mongodb://root:root123@mongodb:27017/ecommerce?authSource=admin
+      MONGODB_DB: ecommerce
     depends_on:
       redis:
         condition: service_healthy
