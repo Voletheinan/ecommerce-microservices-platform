@@ -1,0 +1,1374 @@
+{
+  "info": {
+    "_postman_id": "983b0a4a-97ce-4c6c-b1e7-a16e3c553531",
+    "name": "E-Commerce Microservices API",
+    "description": "Complete API collection for E-Commerce Microservices platform with 14 services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Service (8001)",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('user_id', jsonData.id);",
+                  "    pm.environment.set('email', jsonData.email);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "id": "1626be8d-926f-4dd0-995d-48286fd6e3a7"
+              }
+            }
+          ],
+          "id": "7f5b1ba5-1b25-4032-8cee-bedb585f25ac",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user{{$randomInt}}\n@example.com\",\n  \"username\": \"user{{$randomInt}}\",\n  \"password\": \"password123\",\n  \"full_name\": \"Test User\",\n  \"phone\": \"0123456789\",\n  \"address\": \"123 Main St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.access_token);",
+                  "    pm.environment.set('user_id', jsonData.user_id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "id": "3bfa4d70-786f-4039-a5ac-6d5afeecddaa"
+              }
+            }
+          ],
+          "id": "3d2765dd-d450-402c-8b44-233b786a3f52",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "id": "e486eb91-5332-4989-95c9-2147fbbd4866",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "id": "16248595-8286-4f8e-bb0a-d0a5172843d9",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "id": "6593ee7a-2651-4f29-9fc1-6f9d4506156a",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"updated@example.com\",\n  \"username\": \"user1\",\n  \"password\": \"password123\",\n  \"full_name\": \"Updated User\",\n  \"phone\": \"9876543210\",\n  \"address\": \"456 Oak St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "b29bc984-bda0-42ae-8b9b-e721b45b36f6"
+    },
+    {
+      "name": "Product Service (8002)",
+      "item": [
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('product_id', jsonData._id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "id": "d1a88b72-cb77-4ca7-9f98-7df22d38b505"
+              }
+            }
+          ],
+          "id": "64247215-bbad-4822-8b60-a74f8b7a8b40",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell XPS 13\",\n  \"description\": \"Ultra-thin high-performance laptop with 13-inch display\",\n  \"price\": 1500,\n  \"category\": \"Electronics\",\n  \"stock\": 50,\n  \"sku\": \"LAPTOP-DELL-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "id": "a2ff58a5-be41-4b4f-8489-d2d6bc7435e4",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/?skip=0&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "id": "aa5e083c-fdd6-4884-8771-9a182a7ac327",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "id": "80e18291-a881-48f1-b934-5e2acbb139d6",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8002/api/search/?keyword=laptop&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "id": "b71f1ff7-0361-43c2-bcca-7c9ba91937bb",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell XPS 15\",\n  \"description\": \"Updated description\",\n  \"price\": 1800,\n  \"category\": \"Electronics\",\n  \"stock\": 40,\n  \"sku\": \"LAPTOP-DELL-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "id": "4a3cdec5-55b6-489f-89ee-041696e6cf9c",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "8a056d73-61d8-4615-ae72-f594e5b52fe7"
+    },
+    {
+      "name": "Order Service (8003)",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('order_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "id": "04d7aec6-ed85-4558-ae21-e9d0d449d950"
+              }
+            }
+          ],
+          "id": "ba45f963-0a18-4849-86bf-7507a745e96c",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"items\": [\n    {\n      \"product_id\": \"{{product_id}}\",\n      \"quantity\": 2,\n      \"price\": 1500\n    }\n  ],\n  \"shipping_address\": \"123 Main St, City, Country\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "id": "dfca2506-d475-4f9d-8e7c-7dd9943fb4d4",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "id": "0c9cfa19-0f15-4cc4-ae41-130fe814c5cd",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "id": "6a84c6cc-9a7d-441c-a7d0-05a6aec04c78",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "id": "6a76c7f9-2d9c-462c-8979-d86eee099dec",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "1e1799fa-a8bc-4a0c-b14b-bfd46cdb3fe4"
+    },
+    {
+      "name": "Payment Service (8004)",
+      "item": [
+        {
+          "name": "Process Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('payment_id', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "id": "16ef7e9e-e8ca-48e9-b45c-ffaaf95d2972"
+              }
+            }
+          ],
+          "id": "62436f06-59ec-43fc-8929-b1c14d190e03",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"user_id\": {{user_id}},\n  \"amount\": 3000,\n  \"payment_method\": \"credit_card\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Payment by ID",
+          "id": "21c317e6-795e-4560-b18f-b1c8c2a99441",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/{{payment_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                "{{payment_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refund Payment",
+          "id": "42103c7a-bd1c-4d80-8b7d-6c7cb1094673",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"reason\": \"Customer request\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/{{payment_id}}/refund",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                "{{payment_id}}",
+                "refund"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "2ab072a1-8ff7-486d-8946-2f6551d44c2c"
+    },
+    {
+      "name": "Inventory Service (8005)",
+      "item": [
+        {
+          "name": "Create Inventory",
+          "id": "dcef83d9-0ed5-4216-82f2-038ffdd957aa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"quantity\": 100,\n  \"sku\": \"LAPTOP-001\",\n  \"warehouse\": \"Main Warehouse\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Stock",
+          "id": "d951d856-8148-46b5-9949-5d248d4bffc2",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/{{product_id}}/check-stock?quantity=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                "{{product_id}}",
+                "check-stock"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Inventory",
+          "id": "e8e2a9a4-1f55-4d24-be4a-8cb4b436af26",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 80\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "19b53365-7a9d-4a45-817c-3bd082c2b82d"
+    },
+    {
+      "name": "Shipping Service (8006)",
+      "item": [
+        {
+          "name": "Create Shipment",
+          "id": "bc61b016-26d0-4d8d-88fe-3eb35dc24eb4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"destination_address\": \"123 Main St, City\",\n  \"shipping_method\": \"express\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8006/api/shipments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8006",
+              "path": [
+                "api",
+                "shipments",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Track Shipment",
+          "id": "c00a8283-05d7-4e86-83a6-95e3bd5b1758",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8006/api/shipments/{{order_id}}/track",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8006",
+              "path": [
+                "api",
+                "shipments",
+                "{{order_id}}",
+                "track"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "6938ca6a-b759-49c5-9244-9b313652973d"
+    },
+    {
+      "name": "Promotion Service (8007)",
+      "item": [
+        {
+          "name": "Create Promotion",
+          "id": "9f05e59a-eeff-4ed9-aa18-0f657f30b97e",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PROMO2025\",\n  \"discount_percentage\": 10,\n  \"description\": \"Year end promotion\",\n  \"start_date\": \"2025-01-01\",\n  \"end_date\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Promotions",
+          "id": "f6ac4797-33d5-405b-be54-c1e2975e4a34",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Apply Promotion",
+          "id": "af6f58bc-7000-46d2-b219-cab0f8fefefe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"code\": \"PROMO2025\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/apply",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                "apply"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "2a9f8853-59d2-4029-ba23-244fbefddd6e"
+    },
+    {
+      "name": "Rating Service (8008)",
+      "item": [
+        {
+          "name": "Create Rating",
+          "id": "59bfc547-6f30-413b-a7ea-5dadb56e951d",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"user_id\": {{user_id}},\n  \"rating\": 5,\n  \"comment\": \"Excellent product, highly recommended!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8008/api/ratings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8008",
+              "path": [
+                "api",
+                "ratings",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Ratings",
+          "id": "e54e3284-23c9-4dd3-94e9-86c7602a7598",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8008/api/ratings/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8008",
+              "path": [
+                "api",
+                "ratings",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "c2c11b19-4079-4e1d-a83c-2063d7886e0f"
+    },
+    {
+      "name": "Search Service (8009)",
+      "item": [
+        {
+          "name": "Search Products",
+          "id": "c765c0cf-02a1-4e49-ba00-709758840982",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8009/api/search/?keyword=laptop&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8009",
+              "path": [
+                "api",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Advanced Search",
+          "id": "9e3e2b5e-3e06-4636-b209-e3a8ff9a3905",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8009/api/search/advanced?category=Electronics&min_price=1000&max_price=2000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8009",
+              "path": [
+                "api",
+                "search",
+                "advanced"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Electronics"
+                },
+                {
+                  "key": "min_price",
+                  "value": "1000"
+                },
+                {
+                  "key": "max_price",
+                  "value": "2000"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "id": "9953c543-3e7a-4fd8-afd8-c19d108cda77"
+    },
+    {
+      "name": "Favourite Service (8010)",
+      "item": [
+        {
+          "name": "Add to Favorites",
+          "id": "79b72e20-e37d-48d0-b8be-943201c987c8",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"product_id\": \"{{product_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Favorites",
+          "id": "65fd3dcc-7c5b-4a80-9597-46e0e5c0a41d",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove from Favorites",
+          "id": "87cb52ed-2f76-462f-b7f1-b08e52fce922",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/{{user_id}}/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                "{{user_id}}",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "797f53fc-8b99-465f-87ac-79bd4a699954"
+    },
+    {
+      "name": "Notification Service (8011)",
+      "item": [
+        {
+          "name": "Send Notification",
+          "id": "f4fa80c0-f0d4-4b11-bc41-e08350bb89ff",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"message\": \"Your order has been shipped\",\n  \"type\": \"order_update\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8011/api/notifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8011",
+              "path": [
+                "api",
+                "notifications",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Notifications",
+          "id": "82867533-feed-492e-87ca-226362948868",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8011/api/notifications/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8011",
+              "path": [
+                "api",
+                "notifications",
+                "{{user_id}}"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "a74315ea-dafa-43b2-938b-9b5b49465b0d"
+    },
+    {
+      "name": "Tax Service (8012)",
+      "item": [
+        {
+          "name": "Calculate Tax",
+          "id": "b782fa3d-8c88-4e1f-9565-73c144795cea",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"location\": \"Vietnam\",\n  \"product_type\": \"Electronics\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8012/api/tax/calculate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8012",
+              "path": [
+                "api",
+                "tax",
+                "calculate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Tax Rate",
+          "id": "45ece3eb-efc4-4f29-b9a9-802d898424af",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8012/api/tax/rates?location=Vietnam&product_type=Electronics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8012",
+              "path": [
+                "api",
+                "tax",
+                "rates"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "Vietnam"
+                },
+                {
+                  "key": "product_type",
+                  "value": "Electronics"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "id": "d8109440-8669-445c-a65e-2b37679114ca"
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "User Service Health",
+          "id": "a0fb1025-b04b-4084-87f7-709d3864faed",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8001/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Product Service Health",
+          "id": "0795c8f6-7091-41d3-92ed-a6f0ab83c128",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8002/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Order Service Health",
+          "id": "0a58b64a-7572-4390-a7c1-ce45473e298f",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8003/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Payment Service Health",
+          "id": "e463ff6e-7ec2-478a-86c9-8fc67fe65d1b",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8004/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory Service Health",
+          "id": "c73cbc50-b1c5-4bba-8f7f-d75bf1f95fa1",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}:8005/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ],
+      "id": "462ee776-dee6-4c45-b87d-06c65c967dfc"
+    }
+  ],
+  "variable": [
+    {
+      "id": "8257c00f-db82-4b31-830b-e24765e8563c",
+      "key": "base_url",
+      "value": "http://localhost",
+      "type": "string"
+    },
+    {
+      "id": "c57b39d2-4ae4-481e-97bc-d3ecad15d33d",
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "a49d12a5-04e4-4bb1-bb20-806360c52bd6",
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "81dbadf4-f8ac-4b44-95d4-f835b3b93b35",
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "811e2d27-9d11-4464-8ed3-88b38a37cc2c",
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "6b10d36c-01e2-40ac-bf6e-0ce6769da426",
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "7b38b087-7590-4522-b5bf-24d5954c10c8",
+      "key": "email",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

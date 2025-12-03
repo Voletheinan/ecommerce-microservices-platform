@@ -45,4 +45,13 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
     user_id: str = payload.get("sub")
     if user_id is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-    return {"user_id": user_id, "email": payload.get("email")}
+    return {"user_id": user_id, "email": payload.get("email"), "role": payload.get("role", "client")}
+
+def get_admin_user(current_user: dict = Depends(get_current_user)):
+    """Check if user is admin"""
+    if current_user.get("role") != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user

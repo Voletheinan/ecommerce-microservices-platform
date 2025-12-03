@@ -1,0 +1,1317 @@
+{
+  "info": {
+    "_postman_id": "ecommerce-microservices-2025",
+    "name": "E-Commerce Microservices API",
+    "description": "Complete API collection for E-Commerce Microservices platform with 14 services",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Service (8001)",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('user_id', jsonData.id);",
+                  "    pm.environment.set('email', jsonData.email);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user{{$randomInt}}\n@example.com\",\n  \"username\": \"user{{$randomInt}}\",\n  \"password\": \"password123\",\n  \"full_name\": \"Test User\",\n  \"phone\": \"0123456789\",\n  \"address\": \"123 Main St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('token', jsonData.access_token);",
+                  "    pm.environment.set('user_id', jsonData.user_id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user1\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"updated@example.com\",\n  \"username\": \"user1\",\n  \"password\": \"password123\",\n  \"full_name\": \"Updated User\",\n  \"phone\": \"9876543210\",\n  \"address\": \"456 Oak St\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8001/api/users/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "api",
+                "users",
+                "{{user_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Service (8002)",
+      "item": [
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('product_id', jsonData._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell XPS 13\",\n  \"description\": \"Ultra-thin high-performance laptop with 13-inch display\",\n  \"price\": 1500,\n  \"category\": \"Electronics\",\n  \"stock\": 50,\n  \"sku\": \"LAPTOP-DELL-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/?skip=0&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8002/api/search/?keyword=laptop&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laptop Dell XPS 15\",\n  \"description\": \"Updated description\",\n  \"price\": 1800,\n  \"category\": \"Electronics\",\n  \"stock\": 40,\n  \"sku\": \"LAPTOP-DELL-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8002/api/products/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "api",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Service (8003)",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('order_id', jsonData.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"items\": [\n    {\n      \"product_id\": \"{{product_id}}\",\n      \"quantity\": 2,\n      \"price\": 1500\n    }\n  ],\n  \"shipping_address\": \"123 Main St, City, Country\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8003/api/orders/{{order_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "api",
+                "orders",
+                "{{order_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Service (8004)",
+      "item": [
+        {
+          "name": "Process Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.environment.set('payment_id', jsonData.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"user_id\": {{user_id}},\n  \"amount\": 3000,\n  \"payment_method\": \"credit_card\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Payment by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/{{payment_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                "{{payment_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refund Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"reason\": \"Customer request\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8004/api/payments/{{payment_id}}/refund",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "api",
+                "payments",
+                "{{payment_id}}",
+                "refund"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory Service (8005)",
+      "item": [
+        {
+          "name": "Create Inventory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"quantity\": 100,\n  \"sku\": \"LAPTOP-001\",\n  \"warehouse\": \"Main Warehouse\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Check Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/{{product_id}}/check-stock?quantity=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                "{{product_id}}",
+                "check-stock"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Inventory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 80\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8005/api/inventory/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "api",
+                "inventory",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shipping Service (8006)",
+      "item": [
+        {
+          "name": "Create Shipment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"destination_address\": \"123 Main St, City\",\n  \"shipping_method\": \"express\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8006/api/shipments/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8006",
+              "path": [
+                "api",
+                "shipments",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Track Shipment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8006/api/shipments/{{order_id}}/track",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8006",
+              "path": [
+                "api",
+                "shipments",
+                "{{order_id}}",
+                "track"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotion Service (8007)",
+      "item": [
+        {
+          "name": "Create Promotion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PROMO2025\",\n  \"discount_percentage\": 10,\n  \"description\": \"Year end promotion\",\n  \"start_date\": \"2025-01-01\",\n  \"end_date\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Promotions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Apply Promotion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": {{order_id}},\n  \"code\": \"PROMO2025\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8007/api/promotions/apply",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8007",
+              "path": [
+                "api",
+                "promotions",
+                "apply"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rating Service (8008)",
+      "item": [
+        {
+          "name": "Create Rating",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": \"{{product_id}}\",\n  \"user_id\": {{user_id}},\n  \"rating\": 5,\n  \"comment\": \"Excellent product, highly recommended!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8008/api/ratings/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8008",
+              "path": [
+                "api",
+                "ratings",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Ratings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8008/api/ratings/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8008",
+              "path": [
+                "api",
+                "ratings",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search Service (8009)",
+      "item": [
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8009/api/search/?keyword=laptop&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8009",
+              "path": [
+                "api",
+                "search",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "laptop"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Advanced Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8009/api/search/advanced?category=Electronics&min_price=1000&max_price=2000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8009",
+              "path": [
+                "api",
+                "search",
+                "advanced"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Electronics"
+                },
+                {
+                  "key": "min_price",
+                  "value": "1000"
+                },
+                {
+                  "key": "max_price",
+                  "value": "2000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Favourite Service (8010)",
+      "item": [
+        {
+          "name": "Add to Favorites",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"product_id\": \"{{product_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove from Favorites",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8010/api/favorites/{{user_id}}/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8010",
+              "path": [
+                "api",
+                "favorites",
+                "{{user_id}}",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notification Service (8011)",
+      "item": [
+        {
+          "name": "Send Notification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{user_id}},\n  \"message\": \"Your order has been shipped\",\n  \"type\": \"order_update\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8011/api/notifications/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8011",
+              "path": [
+                "api",
+                "notifications",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}:8011/api/notifications/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8011",
+              "path": [
+                "api",
+                "notifications",
+                "{{user_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tax Service (8012)",
+      "item": [
+        {
+          "name": "Calculate Tax",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 1000,\n  \"location\": \"Vietnam\",\n  \"product_type\": \"Electronics\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}:8012/api/tax/calculate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8012",
+              "path": [
+                "api",
+                "tax",
+                "calculate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Tax Rate",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8012/api/tax/rates?location=Vietnam&product_type=Electronics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8012",
+              "path": [
+                "api",
+                "tax",
+                "rates"
+              ],
+              "query": [
+                {
+                  "key": "location",
+                  "value": "Vietnam"
+                },
+                {
+                  "key": "product_type",
+                  "value": "Electronics"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "User Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8001/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8001",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Product Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8002/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8002",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Order Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8003/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8003",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Payment Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8004/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8004",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:8005/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "8005",
+              "path": [
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "payment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
