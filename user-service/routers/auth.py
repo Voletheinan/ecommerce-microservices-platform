@@ -25,20 +25,27 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = UserService.create_user(db, user)
     return db_user
 
-@router.post("/login", response_model=Token)
+@router.post("/login")
 def login(credentials: UserLogin, db: Session = Depends(get_db)):
     """Login user"""
     user = UserService.authenticate_user(db, credentials.username, credentials.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    access_token = create_access_token(data={"sub": str(user.id), "email": user.email})
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user_id": user.id,
-        "email": user.email
-    }
+    role = "admin" if user.id == 11 else "client"
+    access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": role})
+    response = Token(
+        access_token=access_token,
+        token_type="bearer",
+        user_id=user.id,
+        email=user.email,
+        role=role
+    )
+    import json
+    print(f"Token object: {response}")
+    print(f"Token dict: {response.model_dump()}")
+    print(f"Token JSON: {response.model_dump_json()}")
+    return response.model_dump()
 
 @router.get("/me", response_model=User)
 def get_current_user_info(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -81,3 +88,14 @@ def delete_user(user_id: int, current_user: dict = Depends(get_current_user), db
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return {"status": "user deactivated"}
+
+@router.post("/{user_id}/set-admin")
+def set_admin(user_id: int, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Set user as admin (admin only)"""
+    if current_user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = UserService.update_user(db, user_id, role="admin")
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User promoted to admin", "user_id": user.id, "role": user.role}

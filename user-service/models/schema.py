@@ -21,6 +21,7 @@ class UserLogin(BaseModel):
 
 class User(UserBase):
     id: int
+    role: str = None
     is_active: bool
     created_at: datetime
     updated_at: datetime
@@ -33,6 +34,10 @@ class Token(BaseModel):
     token_type: str
     user_id: int
     email: str
+    role: str = "client"
+    
+    class Config:
+        populate_by_name = True
 
 class UserProfile(BaseModel):
     user_id: int
