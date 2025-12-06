@@ -2,6 +2,7 @@
 Order models for MySQL
 """
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
@@ -17,6 +18,9 @@ class Order(Base):
     shipping_address = Column(String(500))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationship
+    order_items = relationship("OrderItem", back_populates="order")
 
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -24,6 +28,10 @@ class OrderItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     order_id = Column(Integer, ForeignKey("orders.id"))
     product_id = Column(String(100))
+    product_name = Column(String(500), nullable=True)
     quantity = Column(Integer)
     price = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Relationship
+    order = relationship("Order", back_populates="order_items")

@@ -6,8 +6,26 @@ from sqlalchemy import select
 from models.schema import OrderCreate, OrderUpdate
 from models.order import Order, OrderItem
 from config.kafka import kafka_service
+import httpx
+import os
+from typing import Optional
+
+PRODUCT_SERVICE_URL = os.getenv("PRODUCT_SERVICE_URL", "http://product-service:8002")
 
 class OrderService:
+    @staticmethod
+    async def get_product_name(product_id: str) -> Optional[str]:
+        """Fetch product name from product service"""
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(f"{PRODUCT_SERVICE_URL}/api/products/{product_id}")
+                if response.status_code == 200:
+                    product = response.json()
+                    return product.get("name")
+        except Exception as e:
+            print(f"Error fetching product {product_id}: {e}")
+        return None
+    
     @staticmethod
     def create_order(db: Session, order: OrderCreate):
         """Create new order"""
@@ -19,8 +37,7 @@ class OrderService:
             shipping_address=order.shipping_address
         )
         db.add(db_order)
-        db.commit()
-        db.refresh(db_order)
+        db.flush()  # Flush to get the ID
         
         # Create order items
         for item in order.items:
@@ -34,25 +51,30 @@ class OrderService:
         
         db.commit()
         
+        # Re-fetch fresh from DB
+        db_order_fresh = db.query(Order).filter(Order.id == db_order.id).first()
+        
         # Publish event to Kafka
         kafka_service.publish_event("order-events", {
             "event": "order_created",
-            "order_id": db_order.id,
+            "order_id": db_order_fresh.id,
             "user_id": order.user_id,
             "total_amount": total_amount
         })
         
-        return db_order
+        return db_order_fresh
     
     @staticmethod
     def get_order(db: Session, order_id: int):
         """Get order by ID"""
-        return db.query(Order).filter(Order.id == order_id).first()
+        from sqlalchemy.orm import selectinload
+        return db.query(Order).options(selectinload(Order.order_items)).filter(Order.id == order_id).first()
     
     @staticmethod
     def list_orders(db: Session, user_id: int = None, skip: int = 0, limit: int = 10):
         """List orders"""
-        query = db.query(Order)
+        from sqlalchemy.orm import selectinload
+        query = db.query(Order).options(selectinload(Order.order_items))
         if user_id:
             query = query.filter(Order.user_id == user_id)
         return query.offset(skip).limit(limit).all()
