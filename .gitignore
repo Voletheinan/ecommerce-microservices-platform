@@ -48,6 +48,13 @@ docker-compose.override.yml
 
 # Environment
 .env
+
+# Node modules
+node_modules/
+.next/
+out/
+dist/
+build/
 .env.local
 .env.*.local
 
