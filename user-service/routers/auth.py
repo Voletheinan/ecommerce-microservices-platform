@@ -27,25 +27,38 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login")
 def login(credentials: UserLogin, db: Session = Depends(get_db)):
-    """Login user"""
-    user = UserService.authenticate_user(db, credentials.username, credentials.password)
+    """Login user - accepts username or email"""
+    # Support both username and email
+    username_or_email = credentials.username or credentials.email
+    if not username_or_email:
+        raise HTTPException(status_code=400, detail="Username or email is required")
+    
+    user = UserService.authenticate_user(db, username_or_email, credentials.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     role = "admin" if user.id == 11 else "client"
     access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": role})
-    response = Token(
+    token_response = Token(
         access_token=access_token,
         token_type="bearer",
         user_id=user.id,
         email=user.email,
         role=role
     )
-    import json
-    print(f"Token object: {response}")
-    print(f"Token dict: {response.model_dump()}")
-    print(f"Token JSON: {response.model_dump_json()}")
-    return response.model_dump()
+    # Return token with user info
+    return {
+        **token_response.model_dump(),
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "full_name": user.full_name,
+            "phone": user.phone,
+            "address": user.address,
+            "role": user.role
+        }
+    }
 
 @router.get("/me", response_model=User)
 def get_current_user_info(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):

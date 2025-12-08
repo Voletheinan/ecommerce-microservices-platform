@@ -46,8 +46,12 @@ class UserService:
         return db_user
     
     @staticmethod
-    def authenticate_user(db: Session, username: str, password: str):
-        user = UserService.get_user_by_username(db, username)
+    def authenticate_user(db: Session, username_or_email: str, password: str):
+        # Try username first
+        user = UserService.get_user_by_username(db, username_or_email)
+        # If not found, try email
+        if not user:
+            user = UserService.get_user_by_email(db, username_or_email)
         if not user:
             return None
         if not UserService.verify_password(password, user.hashed_password):
